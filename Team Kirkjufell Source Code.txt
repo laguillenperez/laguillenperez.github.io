@@ -1,0 +1,207 @@
+Function BusinessProfit (float array(?) categoryCost, float array(?) storeCharge, integer array(?) endStock) returns float array(?) businessProfit 
+   // Business Profit takes in the cost from the vendor, aswell as the price at which the business sells the product.
+   // The function will then take in the amount the business sold in the day and output the total profit for each category
+   integer i 
+
+   float myProfit 
+
+   float myAmount 
+   
+   businessProfit.size = categoryCost.size
+
+   for i = 0; i < categoryCost.size; i = i + 1 
+
+      myAmount = endStock[i] 
+
+      myProfit = (storeCharge[i] - categoryCost[i]) * myAmount 
+
+      businessProfit[i] = myProfit	 
+
+Function CategoryPercentage(float array(?) beginStock, float array(?) currentStock) returns float array(?) stockPercentage 
+
+   // Function calculates the percentage of stock remaining for each category. 
+
+   // Compares the current stock to the beginning stock and outputs the percentage of stock left 
+
+   integer i 
+
+   stockPercentage.size = beginStock.size 
+
+   for i = 0; i < beginStock.size; i = i + 1 
+
+      if beginStock[i] > 0 
+         // Calculate percentage of stock left. 
+         stockPercentage[i] = (currentStock[i] / beginStock[i]) * 100 
+      else 
+         // If beginStock is 0, set stock percentage to 0 to avoid division by zero. 
+         stockPercentage[i] = 0 
+
+
+Function CurrentStock(float array(?) beginStock, float array(?) endStock) returns float array(?) currentStock 
+   // Current Stock will take in the beginning stock of the day, and how much was sold in that business day and output
+   // the current stock on hand for each category
+   integer i   
+
+   Put "---------------- Current Stock ----------------" to output
+   Put "\n" to output
+   currentStock.size = beginStock.size
+   for i = 0; i < endStock.size; i = i + 1 
+      currentStock[i] = beginStock[i] - endStock[i]
+      Put "FOR CATEGORY " to output
+      Put i + 1 to output
+      Put "\n" to output
+      Put "==============" to output
+      Put "\n" to output
+      Put "The Starting Stock Is: " to output
+      Put beginStock[i] to output with 0 decimal places
+      Put "\n" to output
+      Put "The Sold Stock Was: " to output
+      Put endStock[i] to output	with 0 decimal places
+      Put "\n" to output
+      Put "The Current Stock Is: " to output
+      Put currentStock[i] to output with 0 decimal places	
+      Put "\n" to output	  
+   Put "-----------------------------------------------" to output
+   Put "\n" to output
+   Put "\n" to output
+ 
+Function OrderSheet(float array(?) currentStock, float array(?) preferStock) returns nothing 
+   // The order sheet will take in the current stock on hand and the preferred stock amount for each category
+   // it will then print out and order sheet of each category that is running low in reference to the preffered stock amount
+
+   integer i 
+
+   integer closeStock 
+
+   Put "---------------- ORDER SHEET ------------------" to output 
+   Put "\n" to output
+
+   for i = 0; i < preferStock.size; i = i + 1 
+
+      if currentStock [i] <= 0 
+
+         Put "Your company is all out of Category " to output
+
+         Put i + 1 to output 
+
+         Put ": " to output 
+
+         Put currentStock[i] to output with 0 decimal places
+         
+         Put "\n" to output
+
+      elseif currentStock[i] < preferStock[i] 
+
+         Put "Your company is running low on Category " to output 
+
+         Put i + 1 to output 
+
+         Put ": " to output 
+
+         Put currentStock[i] to output with 0 decimal places
+         
+         Put "\n" to output
+
+      else 
+
+         Put "Your company has a healthy stock on Category " to output 
+
+         Put i + 1 to output 
+
+         Put ": " to output 
+
+         Put currentStock[i] to output with 0 decimal places
+         
+         Put "\n" to output
+
+   Put "---------------- END ORDER SHEET --------------" to output 
+   Put "\n" to output
+   Put "\n" to output
+
+ 
+
+Function InitializeArray(integer arraySize) returns float array(?) myArray 
+   // This function will take in an array size and initialize an array with the inputs the user provides
+
+   integer i 
+
+   myArray.size = arraySize
+   
+   for i = 0; i < arraySize; i = i + 1 
+
+      myArray[i] = Get next input 
+
+Function Main() returns nothing 
+
+   integer categorySize 
+   float array(?) beginStock 
+   float array(?) endStock 
+   float array(?) preferStock
+   float array(?) catCost
+   float array(?) catCharge
+   float array(?) currStock 
+   float array(?) bussProfit
+   float array(?) categoryPercent
+   integer i
+   
+   // Initializes the array size for function use
+   categorySize = Get next input 
+
+   beginStock.size = categorySize 
+
+   endStock.size = categorySize 
+
+   preferStock.size = categorySize 
+
+   catCost.size = categorySize 
+
+   catCharge.size = categorySize 
+
+   currStock.size = categorySize 
+
+   bussProfit.size = categorySize 
+   
+   categoryPercent.size = categorySize
+ 
+
+   beginStock = InitializeArray(categorySize) 
+
+   endStock = InitializeArray(categorySize) 
+
+   preferStock = InitializeArray(categorySize) 
+
+   catCost = InitializeArray(categorySize) 
+
+   catCharge = InitializeArray(categorySize) 
+
+   currStock = CurrentStock(beginStock, endStock) 
+
+   OrderSheet(currStock, preferStock)
+
+   categoryPercent = CategoryPercentage(beginStock,currStock) 
+   //Prints out the percentage of the category left.
+   Put "---------------- Category Percent -------------" to output
+   Put "\n" to output 
+   for i = 0; i < categoryPercent.size; i = i + 1
+      Put "The Percentage sold of Category " to output
+      Put i + 1 to output
+      Put " Is: %" to output
+      Put categoryPercent[i] to output with 2 decimal places
+      Put "\n" to output
+   Put "-----------------------------------------------" to output
+   Put "\n" to output 
+   Put "\n" to output   
+
+   bussProfit = BusinessProfit(catCost, catCharge, endStock) 
+   // Prints out the business profit for each category for the user to reference
+   Put "---------------- Day Profit -------------------" to output
+   Put "\n" to output
+   for i = 0; i < bussProfit.size; i = i + 1
+      Put "The Business Profit for Category " to output
+      Put i + 1 to output
+      Put " Was: $" to output
+      Put bussProfit[i] to output with 2 decimal places
+      Put "\n" to output
+   Put "-----------------------------------------------" to output
+   Put "\n" to output
+   Put "\n" to output
